@@ -1,5 +1,12 @@
 import styled from '@emotion/styled';
 
+export const OptionsList = styled.ul`
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: ${({ theme }) => theme.space[2]}px;
+`;
+
 export const OptionItem = styled.li`
   :not(:last-child) {
     margin-right: 10px;

@@ -1,39 +1,34 @@
-import { useState } from 'react';
+import { useReducer } from 'react';
 import Box from './Box';
 import Section from './Section';
 import Statistics from './Statistics';
-import FeedbackOptions from './FeedbackOptions';
 import Notification from './Notification';
+import FeedbackOptions from './FeedbackOptions';
 
-const feedBackOptions = ['good', 'neutral', 'bad'];
+const initialState = { good: 0, neutral: 0, bad: 0 };
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'good':
+      return { ...state, good: state.good + 1 };
+    case 'neutral':
+      return { ...state, neutral: state.neutral + 1 };
+    case 'bad':
+      return { ...state, bad: state.bad + 1 };
+    default:
+      console.log('wrong option');
+  }
+}
 
 export function App() {
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
-
-  const handleLeaveFeedback = comment => {
-    switch (comment) {
-      case 'good':
-        setGood(good + 1);
-        break;
-      case 'neutral':
-        setNeutral(neutral + 1);
-        break;
-      case 'bad':
-        setBad(bad + 1);
-        break;
-      default:
-        console.log('wrong option');
-    }
-  };
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const countTotalFeedback = () => {
-    return good + neutral + bad;
+    return Object.values(state).reduce((acc, item) => acc + item, 0);
   };
 
   const countPositiveFeedbackPercentage = () => {
-    return Math.round((good / countTotalFeedback()) * 100);
+    return Math.round((state.good / countTotalFeedback()) * 100);
   };
 
   const total = countTotalFeedback();
@@ -42,18 +37,15 @@ export function App() {
   return (
     <Box p={4}>
       <Section title="Please leave feedback:">
-        <FeedbackOptions
-          options={feedBackOptions}
-          onLeaveFeedback={handleLeaveFeedback}
-        />
+        <FeedbackOptions options={Object.keys(state)} action={dispatch} />
       </Section>
 
       <Section title="Statistics:">
         {total ? (
           <Statistics
-            good={good}
-            neutral={neutral}
-            bad={bad}
+            good={state.good}
+            neutral={state.neutral}
+            bad={state.bad}
             total={total}
             positivePercentage={positive}
           />
