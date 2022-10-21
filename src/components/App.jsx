@@ -7,17 +7,10 @@ import FeedbackOptions from './FeedbackOptions';
 
 const initialState = { good: 0, neutral: 0, bad: 0 };
 
-function reducer(state, action) {
-  switch (action.type) {
-    case 'good':
-      return { ...state, good: state.good + 1 };
-    case 'neutral':
-      return { ...state, neutral: state.neutral + 1 };
-    case 'bad':
-      return { ...state, bad: state.bad + 1 };
-    default:
-      console.log('wrong option');
-  }
+function reducer(state, { type }) {
+  const newState = { ...state };
+  newState[type] = state[type] + 1;
+  return newState;
 }
 
 export function App() {
@@ -43,9 +36,7 @@ export function App() {
       <Section title="Statistics:">
         {total ? (
           <Statistics
-            good={state.good}
-            neutral={state.neutral}
-            bad={state.bad}
+            state={state}
             total={total}
             positivePercentage={positive}
           />

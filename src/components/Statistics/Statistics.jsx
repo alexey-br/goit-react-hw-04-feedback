@@ -2,18 +2,13 @@ import PropTypes from 'prop-types';
 import Box from 'components/Box';
 import { StatItem } from './Statistics.styled';
 
-export default function Statistics({
-  good,
-  neutral,
-  bad,
-  total,
-  positivePercentage,
-}) {
+export default function Statistics({ state, total, positivePercentage }) {
+  const options = Object.keys(state);
   return (
     <Box as="ul" p={0} m={0}>
-      <StatItem>Good: {good}</StatItem>
-      <StatItem>Neutral: {neutral}</StatItem>
-      <StatItem>Bad: {bad}</StatItem>
+      {options.map((option, idx) => (
+        <StatItem key={idx}>option: {state[option]}</StatItem>
+      ))}
       <StatItem>Total: {total}</StatItem>
       <StatItem>Positive feedback: {total ? positivePercentage : 0}%</StatItem>
     </Box>
@@ -21,9 +16,7 @@ export default function Statistics({
 }
 
 Statistics.propTypes = {
-  good: PropTypes.number.isRequired,
-  neutral: PropTypes.number.isRequired,
-  bad: PropTypes.number.isRequired,
+  state: PropTypes.objectOf(PropTypes.number).isRequired,
   total: PropTypes.number.isRequired,
   positivePercentage: PropTypes.number.isRequired,
 };
